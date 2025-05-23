@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload ke Pixhost</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #0f2027, #2c5364);
+      font-family: sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      text-align: center;
+    }
+    input[type="file"] {
+      margin: 1rem 0;
+    }
+    button {
+      background: #1dd1a1;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 1rem;
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Upload Gambar ke Pixhost</h2>
+    <input type="file" id="image" />
+    <br />
+    <button onclick="upload()">Upload</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    async function upload() {
+      const input = document.getElementById('image');
+      const file = input.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append('image', file);
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      document.getElementById('result').innerHTML = data.url
+        ? `<a href="\${data.url}" target="_blank">\${data.url}</a>`
+        : `Error: \${data.error}`;
+    }
+  </script>
+</body>
+</html>
